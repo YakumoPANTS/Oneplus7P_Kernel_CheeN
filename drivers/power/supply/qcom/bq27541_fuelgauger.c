@@ -756,7 +756,7 @@ out:
 		get_current_time(&di->soc_pre_time);
 		/* store when soc changed */
 		power_supply_changed(di->batt_psy);
-		pr_info("soc:%d, soc_calib:%d, VOLT:%d, current:%d\n",
+		pr_debug("soc:%d, soc_calib:%d, VOLT:%d, current:%d\n",
 		soc, soc_calib, bq27541_battery_voltage(di) / 1000,
 		bq27541_average_current(di) / 1000);
 	}
@@ -794,7 +794,7 @@ struct bq27541_device_info *di, int suspend_time_ms)
 			goto read_soc_err;
 		}
 		if (soc_pre != soc)
-			pr_err("bq27541_battery_soc = %d\n", soc);
+			pr_debug("bq27541_battery_soc = %d\n", soc);
 
 		soc_pre = soc;
 	} else {
@@ -1081,8 +1081,8 @@ static struct external_battery_gauge bq27541_batt_gauge = {
 	.set_lcd_off_status         = bq27541_set_lcd_off_status,
 	.fast_chg_started_status    = bq27541_get_fastchg_started_status,
 };
-#define BATTERY_SOC_UPDATE_MS 12000
-#define LOW_BAT_SOC_UPDATE_MS 6000
+#define BATTERY_SOC_UPDATE_MS 1500
+#define LOW_BAT_SOC_UPDATE_MS 1500
 
 #define RESUME_SCHDULE_SOC_UPDATE_WORK_MS 60000
 
@@ -2059,10 +2059,8 @@ static int bq27541_battery_resume(struct device *dev)
 				di->rtc_resume_time - di->lcd_off_time);
 		__pm_stay_awake(&di->update_soc_wake_lock);
 		get_current_time(&di->lcd_off_time);
-		queue_delayed_work_on(0,
-				update_pre_capacity_data.workqueue,
-				&(update_pre_capacity_data.work),
-				msecs_to_jiffies(1000));
+		queue_delayed_work(update_pre_capacity_data.workqueue,
+				&(update_pre_capacity_data.work), msecs_to_jiffies(1000));
 	}
 	schedule_delayed_work(&bq27541_di->battery_soc_work,
 			msecs_to_jiffies(RESUME_SCHDULE_SOC_UPDATE_WORK_MS));

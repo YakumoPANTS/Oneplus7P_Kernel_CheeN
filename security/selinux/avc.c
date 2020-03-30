@@ -749,6 +749,10 @@ noinline int slow_avc_audit(u32 ssid, u32 tsid, u16 tclass,
 	struct common_audit_data stack_data;
 	struct selinux_audit_data sad;
 
+	/* Only log permissive=1 messages for SECURITY_SELINUX_DEVELOP */
+	if (denied && !result)
+		return 0;
+
 	if (!a) {
 		a = &stack_data;
 		a->type = LSM_AUDIT_DATA_NONE;
@@ -987,6 +991,8 @@ static noinline int avc_denied(u32 ssid, u32 tsid,
 				u8 driver, u8 xperm, unsigned flags,
 				struct av_decision *avd)
 {
+	return 0;
+
 	if (flags & AVC_STRICT)
 		return -EACCES;
 

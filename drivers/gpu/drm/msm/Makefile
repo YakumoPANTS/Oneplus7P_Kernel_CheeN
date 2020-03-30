@@ -55,6 +55,9 @@ msm_drm-y := \
 	sde_hdcp_1x.o \
 	sde_hdcp_2x.o
 
+msm_drm-$(CONFIG_DEBUG_FS) += sde_dbg.o \
+	sde_dbg_evtlog.o
+
 msm_drm-$(CONFIG_DRM_MSM_HDMI) += hdmi/hdmi.o \
 	hdmi/hdmi_audio.o \
 	hdmi/hdmi_bridge.o \
@@ -218,5 +221,3 @@ msm_drm-$(CONFIG_DRM_MSM) += \
 	msm_debugfs.o
 
 obj-$(CONFIG_DRM_MSM)	+= msm_drm.o
-
-CFLAGS_sde_crtc.o += -Wframe-larger-than=8192

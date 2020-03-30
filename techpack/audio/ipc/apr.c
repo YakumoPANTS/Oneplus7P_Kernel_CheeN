@@ -1124,9 +1124,9 @@ static int __init apr_debug_init(void)
 }
 #else
 static int __init apr_debug_init(void)
-(
+{
 	return 0;
-)
+}
 #endif
 
 static void apr_cleanup(void)
@@ -1147,7 +1147,9 @@ static void apr_cleanup(void)
 				mutex_destroy(&client[i][j].svc[k].m_lock);
 		}
 	}
+#ifdef CONFIG_DEBUG_FS
 	debugfs_remove(debugfs_apr_debug);
+#endif
 }
 
 static int apr_probe(struct platform_device *pdev)
@@ -1183,7 +1185,7 @@ static int apr_probe(struct platform_device *pdev)
 	apr_pkt_ctx = ipc_log_context_create(APR_PKT_IPC_LOG_PAGE_CNT,
 						"apr", 0);
 	if (!apr_pkt_ctx)
-		pr_err("%s: Unable to create ipc log context\n", __func__);
+		pr_debug("%s: Unable to create ipc log context\n", __func__);
 
 	spin_lock(&apr_priv->apr_lock);
 	apr_priv->is_initial_boot = true;

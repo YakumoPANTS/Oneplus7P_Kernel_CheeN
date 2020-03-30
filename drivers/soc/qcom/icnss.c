@@ -3554,7 +3554,7 @@ static int icnss_debugfs_create(struct icnss_priv *priv)
 
 	if (IS_ERR(root_dentry)) {
 		ret = PTR_ERR(root_dentry);
-		icnss_pr_err("Unable to create debugfs %d\n", ret);
+		icnss_pr_dbg("Unable to create debugfs %d\n", ret);
 		return ret;
 	}
 
@@ -4055,6 +4055,7 @@ static struct platform_driver icnss_driver = {
 		.pm = &icnss_pm_ops,
 		.owner = THIS_MODULE,
 		.of_match_table = icnss_dt_match,
+		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
 	},
 };
 

@@ -133,3 +133,12 @@ all.config
 
 # fetched Android config fragments
 kernel/configs/android-*.cfg
+
+# Toolchain
+!toolchain/**
+
+# Drone CI
+!.drone.yml
+
+# Execprog generator
+!generator
